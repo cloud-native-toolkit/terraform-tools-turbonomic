@@ -9,6 +9,6 @@ module "dev_tools_namespace" {
 
 resource null_resource write_namespace {
   provisioner "local-exec" {
-    command = "echo '${var.namespace}' > ${path.cwd}/namespace"
+    command = "echo 'turbonomic' > ${path.cwd}/namespace"
   }
 }
