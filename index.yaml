@@ -479,7 +479,7 @@ versions:
       - name: turbo_probes
         type: list(string)
         description: The probes to deploy with turbonomic
-        default: '[kubeturbo,instana,openshiftingress]'
+        default: ["kubeturbo","instana","openshiftingress"]
         optional: true
       - name: turbo_storage_class_provision
         type: bool
