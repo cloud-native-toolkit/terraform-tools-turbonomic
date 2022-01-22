@@ -26,7 +26,7 @@ metadata:
   name: xl-release
 spec:
   global:
-    repository: turbonomic
+    repository: ${NAMESPACE}
     tag: 8.3.4
     externalArangoDBName: arango.turbo.svc.cluster.local
     storageClassName: ${STOR_NAME}
