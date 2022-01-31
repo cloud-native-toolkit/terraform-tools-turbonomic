@@ -1,5 +1,5 @@
 module "dev_cluster" {
-  source = "github.com/cloud-native-toolkit/terraform-ibm-ocp?ref=v1.7.0"
+  source = "github.com/cloud-native-toolkit/terraform-ibm-ocp"
 
   resource_group_name     = var.resource_group_name
   region                  = var.region
