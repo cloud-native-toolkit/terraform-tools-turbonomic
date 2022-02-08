@@ -27,10 +27,18 @@ metadata:
 spec:
   global:
     repository: turbonomic
-    tag: 8.3.4
+    tag: 8.4.4
     externalArangoDBName: arango.turbo.svc.cluster.local
     storageClassName: ${STOR_NAME}
-    serviceAccountName:  ${SANAME}
+    serviceAccountName: ${SANAME}
+  ui:
+    enabled: true
+    serviceAccountName: ${SANAME}
+  nginx:
+    nginxIsPrimaryIngress: false
+    httpsredirect: false
+  openshiftingress:
+    enabled: true
 
 EOL
 
@@ -40,15 +48,6 @@ EOL
       cat >> ${CHARTS_DIR}/xl-release.yaml << EOL
 
   kubeturbo:
-    enabled: true
-EOL
-    fi
-
-    if [[ "${PROBES}" =~ openshiftingress ]]; then
-      echo "adding openshiftingress probe..."
-      cat >> ${CHARTS_DIR}/xl-release.yaml << EOL
-  
-  openshiftingress:
     enabled: true
 EOL
     fi
