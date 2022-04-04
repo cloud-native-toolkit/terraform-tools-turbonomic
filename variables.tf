@@ -29,7 +29,7 @@ variable "service_account_name" {
 variable "probes" {
   description = "The probes to deploy with turbonomic"
   type        = list(string)
-  default     = ["kubeturbo","instana","openshiftingress"]
+  default     = ["kubeturbo","instana"]
 }
 
 variable "storage_class_provision" {
