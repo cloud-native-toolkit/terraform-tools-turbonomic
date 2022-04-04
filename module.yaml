@@ -4,8 +4,6 @@ description: Module to install Turbonomic
 tags:
     - tools
     - devops
-    - quality gate
-    - lint
 versions:
 - platforms:
     - ocp4

@@ -27,35 +27,40 @@ metadata:
 spec:
   global:
     repository: turbonomic
-    tag: 8.3.4
-    externalArangoDBName: arango.turbo.svc.cluster.local
+    tag: 8.4.4
     storageClassName: ${STOR_NAME}
-    serviceAccountName:  ${SANAME}
+    serviceAccountName: ${SANAME}
+  ui:
+    enabled: true
+  market:
+    image:
+      pullPolicy: IfNotPresent
+      repository: docker.io/turbonomic
+      tag: 8.4.4
+    serviceAccountName: ${SANAME}    
+  nginx:
+    nginxIsPrimaryIngress: false
+    httpsRedirect: false
+  nginxingress:
+    enabled: true
+  openshiftingress:
+    enabled: true
 
 EOL
 
 
     if [[ "${PROBES}" =~ kubeturbo ]]; then
       echo "adding kubeturbo probe..."
-      cat >> ${CHARTS_DIR}/xl-release.yaml << EOL
+      cat >> ${DEST_DIR}/xl-release.yaml << EOL
 
   kubeturbo:
     enabled: true
 EOL
     fi
 
-    if [[ "${PROBES}" =~ openshiftingress ]]; then
-      echo "adding openshiftingress probe..."
-      cat >> ${CHARTS_DIR}/xl-release.yaml << EOL
-  
-  openshiftingress:
-    enabled: true
-EOL
-    fi
-
     if [[ "${PROBES}" =~ instana ]]; then
       echo "adding instana probe..."
-      cat >> ${CHARTS_DIR}/xl-release.yaml << EOL
+      cat >> ${DEST_DIR}/xl-release.yaml << EOL
   
   instana:
     enabled: true
@@ -64,7 +69,7 @@ EOL
 
     if [[ "${PROBES}" =~ aws ]]; then
       echo "adding aws probe..."
-      cat >> ${CHARTS_DIR}/xl-release.yaml << EOL
+      cat >> ${DEST_DIR}/xl-release.yaml << EOL
   
   aws:
     enabled: true
@@ -73,7 +78,7 @@ EOL
 
     if [[ "${PROBES}" =~ azure ]]; then
       echo "adding azure probe..."
-      cat >> ${CHARTS_DIR}/xl-release.yaml << EOL
+      cat >> ${DEST_DIR}/xl-release.yaml << EOL
   
   azure:
     enabled: true
@@ -82,7 +87,7 @@ EOL
 
     if [[ "${PROBES}" =~ prometheus ]]; then
       echo "adding prometheus probe..."
-      cat >> ${CHARTS_DIR}/xl-release.yaml << EOL
+      cat >> ${DEST_DIR}/xl-release.yaml << EOL
   
   prometheus:
     enabled: true
@@ -91,7 +96,7 @@ EOL
 
     if [[ "${PROBES}" =~ servicenow ]]; then
       echo "adding servicenow probe..."
-      cat >> ${CHARTS_DIR}/xl-release.yaml << EOL
+      cat >> ${DEST_DIR}/xl-release.yaml << EOL
   
   servicenow:
     enabled: true
@@ -100,7 +105,7 @@ EOL
 
     if [[ "${PROBES}" =~ tomcat ]]; then
       echo "adding tomcat probe..."
-      cat >> ${CHARTS_DIR}/xl-release.yaml << EOL
+      cat >> ${DEST_DIR}/xl-release.yaml << EOL
   
   tomcat:
     enabled: true
@@ -109,7 +114,7 @@ EOL
 
     if [[ "${PROBES}" =~ jvm ]]; then
       echo "adding jvm probe..."
-      cat >> ${CHARTS_DIR}/xl-release.yaml << EOL
+      cat >> ${DEST_DIR}/xl-release.yaml << EOL
   
   jvm:
     enabled: true
@@ -118,7 +123,7 @@ EOL
 
     if [[ "${PROBES}" =~ websphere ]]; then
       echo "adding websphere probe..."
-      cat >> ${CHARTS_DIR}/xl-release.yaml << EOL
+      cat >> ${DEST_DIR}/xl-release.yaml << EOL
   
   websphere:
     enabled: true
@@ -127,12 +132,13 @@ EOL
 
     if [[ "${PROBES}" =~ weblogic ]]; then
       echo "adding weblogic probe..."
-      cat >> ${CHARTS_DIR}/xl-release.yaml << EOL
+      cat >> ${DEST_DIR}/xl-release.yaml << EOL
   
   weblogic:
     enabled: true
 EOL
     fi
+
     # deploy the release
     kubectl apply -f "${CHARTS_DIR}/xl-release.yaml" -n ${NAMESPACE}
 

@@ -11,62 +11,23 @@ if [[ "$3" == "destroy" ]]; then
     kubectl delete CustomResourceDefinition xls.charts.helm.k8s.io
 else 
     # deploy the chart extensions needed
-    kubectl create -f "${CHARTS_DIR}/charts.helm.k8s.io_xls.yaml"
+    #kubectl create -f "${CHARTS_DIR}/charts.helm.k8s.io_xls.yaml"
 
     # create the yaml for operator deployment and deploy it
 
 cat > "${CHARTS_DIR}/operator.yaml" << EOL
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
 metadata:
-  name: t8c-operator
   labels:
-    app.kubernetes.io/name: t8c-operator
-    app.kubernetes.io/instance: t8c-operator
-    app.kubernetes.io/managed-by: operator-life
-
+    operators.coreos.com/t8c-certified.turbonomic: ""
+  name: t8c-certified
+  namespace: ${NAMESP}
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      name: t8c-operator
-  template:
-    metadata:
-      labels:
-        name: t8c-operator
-    spec:
-      serviceAccountName: ${SANAME}
-      containers:
-      - name: t8c-operator
-        image: turbonomic/t8c-operator:42.0
-        imagePullPolicy: Always
-        env:
-        - name: WATCH_NAMESPACE
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.namespace
-        - name: POD_NAME
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.name
-        - name: OPERATOR_NAME
-          value: "t8c-operator"
-        securityContext:
-          readOnlyRootFilesystem: true
-          capabilities:
-            drop:
-              - ALL
-        volumeMounts:
-        - mountPath: /tmp
-          name: operator-tmpfs0
-      volumes:
-      - name: operator-tmpfs0
-        emptyDir: {}
+  name: t8c-certified
+  source: certified-operators
+  sourceNamespace: openshift-marketplace
 EOL
     kubectl create -f "${CHARTS_DIR}/operator.yaml" -n ${NAMESPACE}
 fi
-
-
-
-
 
